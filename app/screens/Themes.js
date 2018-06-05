@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ScrollView, StatusBar } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { ListItem, Separator } from '../components/Lists';
@@ -13,6 +14,7 @@ const styles = EStyleSheet.create({
 class Themes extends Component {
     handleThemePress = (color) => {
       console.log('press theme', color);
+      this.props.navigation.goBack();
     }
 
     render() {
@@ -55,5 +57,9 @@ class Themes extends Component {
       );
     }
 }
+
+Themes.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Themes;
