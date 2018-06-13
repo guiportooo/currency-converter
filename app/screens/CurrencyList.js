@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { FlatList, View, StatusBar } from 'react-native';
 import { ListItem, Separator } from '../components/Lists';
 import currencies from '../data/currencies';
-
-const TEMP_CURRENT_CURRENCY = 'CAD';
+import { changeBaseCurrency, changeQuoteCurrency } from '../actions/currencies';
 
 class CurrencyList extends Component {
-    handlePress = () => {
+    handlePress = (currency) => {
+      const { type } = this.props.navigation.state.params;
+
+      if (type === 'base') {
+        this.props.dispatch(changeBaseCurrency(currency));
+      } else if (type === 'quote') {
+        this.props.dispatch(changeQuoteCurrency(currency));
+      }
       this.props.navigation.goBack(null);
     };
 
     render() {
+      const comparisonCurrency = this.props.navigation.state.params.type === 'base'
+        ? this.props.baseCurrency
+        : this.props.quoteCurrency;
+
       return (
         <View style={{ flex: 1 }}>
           <StatusBar barStyle="default" translucent={false} />
@@ -20,8 +31,8 @@ class CurrencyList extends Component {
             renderItem={({ item }) =>
             (<ListItem
               text={item}
-              selected={item === TEMP_CURRENT_CURRENCY}
-              onPress={this.handlePress}
+              selected={item === comparisonCurrency}
+              onPress={() => this.handlePress(item)}
             />)}
             keyExtractor={(item, index) => `${index}`}
             ItemSeparatorComponent={Separator}
@@ -33,6 +44,18 @@ class CurrencyList extends Component {
 
 CurrencyList.propTypes = {
   navigation: PropTypes.object,
+  dispatch: PropTypes.func,
+  baseCurrency: PropTypes.string,
+  quoteCurrency: PropTypes.string,
 };
 
-export default CurrencyList;
+const mapStateToProps = (state) => {
+  const { baseCurrency, quoteCurrency } = state.currencies;
+
+  return {
+    baseCurrency,
+    quoteCurrency,
+  };
+};
+
+export default connect(mapStateToProps)(CurrencyList);

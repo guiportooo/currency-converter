@@ -13,11 +13,11 @@ import { swapCurrency, changeCurrencyAmount } from '../actions/currencies';
 
 class Home extends Component {
   handlePressBaseCurrency = () => {
-    this.props.navigation.navigate('CurrencyList', { title: 'Base Currency' });
+    this.props.navigation.navigate('CurrencyList', { title: 'Base Currency', type: 'base' });
   }
 
   handlePressQuoteCurrency = () => {
-    this.props.navigation.navigate('CurrencyList', { title: 'Quote Currency' });
+    this.props.navigation.navigate('CurrencyList', { title: 'Quote Currency', type: 'quote' });
   }
 
   handleTextChange = (amount) => {
@@ -33,11 +33,9 @@ class Home extends Component {
   }
 
   render() {
-    let quotePrice = (this.props.amount * this.props.conversionRate).toFixed(2);
-
-    if (this.props.isFetching) {
-      quotePrice = '...';
-    }
+    const quotePrice = this.props.isFetching
+      ? '...'
+      : (this.props.amount * this.props.conversionRate).toFixed(2);
 
     return (
       <Container>
