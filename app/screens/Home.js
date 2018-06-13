@@ -38,23 +38,25 @@ class Home extends Component {
       : (this.props.amount * this.props.conversionRate).toFixed(2);
 
     return (
-      <Container>
+      <Container backgroundColor={this.props.primaryColor}>
         <StatusBar translucent={false} barStyle="light-content" />
         <Header onPress={this.handleOptionsPress} />
         <KeyboardAvoidingView behavior="padding">
-          <Logo />
+          <Logo tintColor={this.props.primaryColor} />
           <InputWithButton
             buttonText={this.props.baseCurrency}
             onPress={this.handlePressBaseCurrency}
             defaultValue={this.props.amount.toString()}
             keyboardType="numeric"
             onChangeText={this.handleTextChange}
+            textColor={this.props.primaryColor}
           />
           <InputWithButton
             buttonText={this.props.quoteCurrency}
             onPress={this.handlePressQuoteCurrency}
             editable={false}
             defaultValue={quotePrice}
+            textColor={this.props.primaryColor}
           />
           <LastConverted
             base={this.props.baseCurrency}
@@ -78,15 +80,23 @@ Home.propTypes = {
   conversionRate: PropTypes.number,
   isFetching: PropTypes.bool,
   lastConvertedDate: PropTypes.object,
+  primaryColor: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
-  const { baseCurrency, quoteCurrency, amount } = state.currencies;
+  const {
+    currencies: { baseCurrency, quoteCurrency, amount },
+    themes: { primaryColor },
+  } = state;
+
   const conversionSelector = state.currencies.conversions[baseCurrency] || {};
+
   const { rates, isFetching } = conversionSelector || {};
+
   const conversionRate = rates
     ? (rates[quoteCurrency] || 0)
     : 0;
+
   const lastConvertedDate = conversionSelector.date
     ? moment(conversionSelector.date)
     : moment();
@@ -98,6 +108,7 @@ const mapStateToProps = (state) => {
     conversionRate,
     isFetching,
     lastConvertedDate,
+    primaryColor,
   };
 };
 

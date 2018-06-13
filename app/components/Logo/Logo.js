@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { View, ImageBackground, Text, Keyboard, Animated, Platform } from 'react-native';
 import styles from './styles';
 
@@ -56,6 +57,7 @@ class Logo extends Component {
     const imageStyle = [
       styles.image,
       { width: this.logoSize },
+      this.props.tintColor ? { tintColor: this.props.tintColor } : null,
     ];
 
     return (
@@ -76,6 +78,10 @@ class Logo extends Component {
     );
   }
 }
+
+Logo.propTypes = {
+  tintColor: PropTypes.string,
+};
 
 export default Logo;
 
